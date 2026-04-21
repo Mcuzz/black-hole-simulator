@@ -1,0 +1,1 @@
+export const RENDER_SCALE = 0.05
