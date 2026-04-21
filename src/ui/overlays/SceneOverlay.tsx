@@ -1,6 +1,5 @@
 import type { SimulationState } from "../../core/state/simulationState"
 import type { SceneView } from "../../render/scene/SimulationScene"
-import { REGION_COPY, VIEW_COPY } from "../content/simulationCopy"
 import { ClockPanel } from "../panels/ClockPanel"
 import { OverlayDock } from "./components/OverlayDock"
 import { StatusPanel } from "./components/StatusPanel"
@@ -11,16 +10,12 @@ interface SceneOverlayProps {
   onChangeView: (view: SceneView) => void
   showNearClock: boolean
   showFarClock: boolean
-  showSidePanel: boolean
   showViewInfo: boolean
   showStatusPanel: boolean
-  showStoryPanel: boolean
   onToggleNearClock: () => void
   onToggleFarClock: () => void
-  onToggleSidePanel: () => void
   onToggleViewInfo: () => void
   onToggleStatusPanel: () => void
-  onToggleStoryPanel: () => void
 }
 
 export function SceneOverlay({
@@ -29,19 +24,13 @@ export function SceneOverlay({
   onChangeView,
   showNearClock,
   showFarClock,
-  showSidePanel,
   showViewInfo,
   showStatusPanel,
-  showStoryPanel,
   onToggleNearClock,
   onToggleFarClock,
-  onToggleSidePanel,
   onToggleViewInfo,
   onToggleStatusPanel,
-  onToggleStoryPanel,
 }: SceneOverlayProps) {
-  const regionStory = REGION_COPY[state.effects.region]
-  const viewCopy = VIEW_COPY[view]
   const clockGap = Math.max(
     0,
     state.clocks.farObserverTime - state.clocks.nearObserverTime,
@@ -49,58 +38,73 @@ export function SceneOverlay({
 
   return (
     <div className="scene-overlay">
-      <OverlayDock
-        view={view}
-        onChangeView={onChangeView}
-        showFarClock={showFarClock}
-        showNearClock={showNearClock}
-        showSidePanel={showSidePanel}
-        showStatusPanel={showStatusPanel}
-        showStoryPanel={showStoryPanel}
-        showViewInfo={showViewInfo}
-        onToggleFarClock={onToggleFarClock}
-        onToggleNearClock={onToggleNearClock}
-        onToggleSidePanel={onToggleSidePanel}
-        onToggleStatusPanel={onToggleStatusPanel}
-        onToggleStoryPanel={onToggleStoryPanel}
-        onToggleViewInfo={onToggleViewInfo}
-      />
-
-      {showViewInfo && (
-        <div className="view-pill">
-          <span>{viewCopy.label}</span>
-          <strong>{viewCopy.title}</strong>
-          <small>{viewCopy.description}</small>
-        </div>
+      {showViewInfo ? (
+        <OverlayDock
+          onChangeView={onChangeView}
+          onToggleVisibility={onToggleViewInfo}
+          view={view}
+        />
+      ) : (
+        <button
+          className="panel-reveal panel-reveal--views"
+          onClick={onToggleViewInfo}
+          type="button"
+        >
+          Vistas
+        </button>
       )}
 
-      {showStatusPanel && <StatusPanel hasSidePanel={showSidePanel} state={state} />}
+      {showStatusPanel ? (
+        <StatusPanel
+          onToggleVisibility={onToggleStatusPanel}
+          state={state}
+        />
+      ) : (
+        <button
+          className="panel-reveal panel-reveal--status-with-panel"
+          onClick={onToggleStatusPanel}
+          type="button"
+        >
+          Metricas
+        </button>
+      )}
 
-      {showNearClock && (view === "near" || view === "external") && (
+      {showNearClock ? (
         <ClockPanel
-          className="clock-panel clock-panel--left"
+          className="clock-panel clock-panel--bottom-left"
+          onToggleVisibility={onToggleNearClock}
           subtitle="Nave interactiva"
           timeValue={state.clocks.nearObserverTime}
           title="Reloj del observador cercano"
           tone="near"
         />
+      ) : (
+        <button
+          className="panel-reveal panel-reveal--clock-left"
+          onClick={onToggleNearClock}
+          type="button"
+        >
+          Reloj cercano
+        </button>
       )}
 
-      {showFarClock && (view === "far" || view === "external") && (
+      {showFarClock ? (
         <ClockPanel
-          className="clock-panel clock-panel--right"
+          className="clock-panel clock-panel--bottom-right clock-panel--next-to-panel"
+          onToggleVisibility={onToggleFarClock}
           subtitle="Marco de referencia"
           timeValue={state.clocks.farObserverTime}
           title="Reloj del observador lejano"
           tone="far"
         />
-      )}
-
-      {showStoryPanel && (
-        <div className="story-banner">
-          <strong>{regionStory.title}</strong>
-          <small>{regionStory.body}</small>
-        </div>
+      ) : (
+        <button
+          className="panel-reveal panel-reveal--clock-right panel-reveal--clock-next-to-panel"
+          onClick={onToggleFarClock}
+          type="button"
+        >
+          Reloj lejano
+        </button>
       )}
 
       {view === "near" && (

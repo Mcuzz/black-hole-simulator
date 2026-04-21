@@ -2,16 +2,11 @@
   color-scheme: dark;
   --bg: #02060d;
   --panel: rgba(8, 13, 24, 0.78);
-  --panel-strong: rgba(10, 16, 28, 0.9);
   --panel-line: rgba(132, 183, 255, 0.16);
-  --panel-line-strong: rgba(255, 179, 90, 0.2);
   --text: #f3f5f8;
   --muted: #97aac7;
-  --cyan: #7ad1ff;
   --amber: #ffb35a;
-  --ember: #ff6a2a;
   --danger: #ff6161;
-  --safe: #67d39f;
   --title-font: "Gill Sans", "Trebuchet MS", sans-serif;
   --body-font: "Segoe UI", "Trebuchet MS", sans-serif;
 }
@@ -43,18 +38,8 @@ button {
   cursor: pointer;
 }
 
-.app-shell {
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.app-shell--locked {
-  overflow: hidden;
-}
-
+.app-shell,
 .scene-window {
-  background: #02060d;
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -80,7 +65,6 @@ button {
 }
 
 .side-panel-dock {
-  align-items: stretch;
   display: flex;
   justify-content: end;
   padding: 20px;
@@ -88,7 +72,15 @@ button {
   z-index: 3;
 }
 
-.side-panel-dock .side-panel {
+.side-panel-shell {
+  height: 100%;
+  max-height: calc(100vh - 40px);
+  pointer-events: auto;
+  position: relative;
+  width: min(420px, 100%);
+}
+
+.side-panel {
   background: var(--panel);
   border: 1px solid var(--panel-line);
   border-radius: 28px;
@@ -99,10 +91,7 @@ button {
   flex-direction: column;
   gap: 1px;
   height: 100%;
-  max-height: calc(100vh - 40px);
   overflow-y: auto;
-  pointer-events: auto;
-  width: min(420px, 100%);
 }
 
 .side-panel::-webkit-scrollbar {
@@ -163,10 +152,14 @@ button {
   text-transform: uppercase;
 }
 
-.splash-screen__card p {
+.splash-screen__card p,
+.panel-section p,
+.side-panel small,
+.telemetry-footer p,
+.status-chip__tooltip,
+.view-dock__details small {
   color: var(--muted);
-  line-height: 1.6;
-  margin: 0;
+  line-height: 1.56;
 }
 
 .splash-screen__hint {
@@ -184,26 +177,14 @@ button {
 }
 
 .overlay-dock,
-.view-pill,
 .status-panel,
-.story-banner,
 .clock-panel,
 .cockpit-bottom {
   backdrop-filter: blur(16px);
 }
 
-.overlay-dock {
-  left: 20px;
-  pointer-events: auto;
-  position: absolute;
-  top: 20px;
-  width: min(430px, calc(100vw - 40px));
-}
-
-.dock-card,
-.view-pill,
+.overlay-dock,
 .status-panel,
-.story-banner,
 .clock-panel {
   background: var(--panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -211,29 +192,49 @@ button {
   box-shadow:
     0 18px 54px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  pointer-events: auto;
+  position: absolute;
 }
 
-.dock-card {
+.overlay-dock {
+  left: 20px;
   padding: 14px;
+  top: 20px;
+  width: min(520px, calc(100vw - 40px));
 }
 
-.dock-card + .dock-card {
-  margin-top: 12px;
+.view-dock__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-right: 42px;
+}
+
+.view-dock__header .eyebrow {
+  margin-bottom: 0;
 }
 
 .view-nav {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
 }
 
+.view-nav--floating {
+  flex-wrap: nowrap;
+}
+
+.view-nav--floating button {
+  flex: 1;
+  text-align: center;
+}
+
 .view-nav button,
-.resource-toggle,
+.distance-actions button,
 .status-chip__help,
-.distance-actions button {
+.panel-reveal {
   background: rgba(16, 23, 36, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 999px;
   color: var(--text);
   transition:
     transform 180ms ease,
@@ -243,21 +244,22 @@ button {
 }
 
 .view-nav button,
-.resource-toggle,
-.distance-actions button {
+.distance-actions button,
+.panel-reveal {
+  border-radius: 999px;
   padding: 10px 14px;
 }
 
 .view-nav button:hover,
-.resource-toggle:hover,
+.distance-actions button:hover,
 .status-chip__help:hover,
-.distance-actions button:hover {
+.panel-reveal:hover,
+.panel-hide-button:hover {
   border-color: rgba(255, 179, 90, 0.45);
   transform: translateY(-1px);
 }
 
 .view-nav button.active,
-.resource-toggle.active,
 .status-chip__help.active {
   background: linear-gradient(135deg, rgba(255, 106, 42, 0.94), rgba(255, 179, 90, 0.96));
   border-color: transparent;
@@ -265,26 +267,15 @@ button {
   font-weight: 700;
 }
 
-.resource-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.view-dock__details {
+  background: rgba(7, 12, 21, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  margin-top: 14px;
+  padding: 14px;
 }
 
-.resource-toggle {
-  font-size: 0.92rem;
-}
-
-.view-pill {
-  left: 20px;
-  max-width: 420px;
-  padding: 16px 18px;
-  pointer-events: auto;
-  position: absolute;
-  top: 182px;
-}
-
-.view-pill span,
+.view-dock__details span,
 .metric-grid span,
 .equation-card small,
 .clock-panel small,
@@ -295,7 +286,7 @@ button {
   margin-bottom: 8px;
 }
 
-.view-pill span {
+.view-dock__details span {
   color: var(--amber);
   font-size: 0.82rem;
   letter-spacing: 0.18em;
@@ -303,8 +294,7 @@ button {
   text-transform: uppercase;
 }
 
-.view-pill strong,
-.story-banner strong,
+.view-dock__details strong,
 .metric-grid strong,
 .equation-card strong,
 .clock-panel strong,
@@ -313,23 +303,69 @@ button {
   display: block;
 }
 
-.view-pill strong {
-  font-size: 1.08rem;
+.view-dock__details strong {
+  font-size: 1.05rem;
   margin-bottom: 6px;
 }
 
-.status-panel {
-  max-width: 420px;
-  padding: 16px;
-  pointer-events: auto;
+.panel-hide-button {
+  align-items: center;
+  background: rgba(10, 16, 28, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 0.88rem;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
   position: absolute;
-  right: 20px;
-  top: 20px;
-  width: min(420px, calc(100vw - 40px));
+  right: 14px;
+  top: 14px;
+  width: 30px;
+  z-index: 1;
 }
 
-.status-panel--with-panel {
-  right: min(460px, calc(100vw - 40px));
+.panel-hide-button--clock {
+  right: 12px;
+  top: 12px;
+}
+
+.panel-reveal {
+  pointer-events: auto;
+  position: absolute;
+  z-index: 4;
+}
+
+.panel-reveal--views {
+  left: 20px;
+  top: 20px;
+}
+
+.panel-reveal--status-with-panel {
+  right: 460px;
+  top: 20px;
+}
+
+.panel-reveal--clock-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.panel-reveal--clock-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.panel-reveal--clock-next-to-panel {
+  right: 460px;
+}
+
+.status-panel {
+  padding: 16px;
+  right: 460px;
+  top: 20px;
+  width: min(420px, calc(100vw - 40px));
 }
 
 .status-strip {
@@ -345,7 +381,6 @@ button {
   border-radius: 18px;
   min-width: 0;
   padding: 14px;
-  position: relative;
 }
 
 .status-chip__header {
@@ -361,6 +396,7 @@ button {
 
 .status-chip__help {
   align-items: center;
+  border-radius: 999px;
   display: inline-flex;
   font-size: 0.78rem;
   height: 26px;
@@ -370,72 +406,35 @@ button {
   width: 26px;
 }
 
-.status-chip__tooltip {
-  color: var(--muted);
-  line-height: 1.5;
-  margin: 10px 0 0;
+.clock-panel {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  min-height: 126px;
+  padding: 16px 18px;
+  width: min(360px, calc(100vw - 40px));
 }
 
-.story-banner {
+.clock-panel--bottom-left {
   bottom: 20px;
   left: 20px;
-  max-width: 430px;
-  padding: 16px 18px;
-  pointer-events: auto;
-  position: absolute;
 }
 
-.story-banner strong {
-  margin-bottom: 6px;
-}
-
-.cockpit-frame {
-  inset: 0;
-  position: absolute;
-}
-
-.cockpit-top {
-  border-left: 1px solid rgba(122, 209, 255, 0.18);
-  border-right: 1px solid rgba(122, 209, 255, 0.18);
-  border-top: 1px solid rgba(122, 209, 255, 0.22);
-  border-top-left-radius: 220px;
-  border-top-right-radius: 220px;
-  height: 24%;
-  left: 16%;
-  position: absolute;
-  right: 16%;
-  top: 6%;
-}
-
-.cockpit-bottom {
-  background: linear-gradient(180deg, rgba(7, 11, 20, 0.2), rgba(7, 11, 20, 0.78));
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  bottom: 0;
-  color: #dce4ef;
-  display: flex;
-  font-size: 0.82rem;
-  gap: 18px;
-  justify-content: center;
-  left: 0;
-  padding: 18px;
-  position: absolute;
-  right: 0;
-}
-
-.clock-panel {
-  max-width: 220px;
-  padding: 16px;
-  pointer-events: auto;
-  position: absolute;
-  top: 318px;
-}
-
-.clock-panel--left {
-  left: 20px;
-}
-
-.clock-panel--right {
+.clock-panel--bottom-right {
+  bottom: 20px;
   right: 20px;
+}
+
+.clock-panel--next-to-panel {
+  right: 460px;
+}
+
+.clock-panel__face {
+  flex: 0 0 88px;
+}
+
+.clock-panel__content {
+  min-width: 0;
 }
 
 .clock-panel.near {
@@ -451,9 +450,10 @@ button {
 }
 
 .clock-panel h2 {
-  font-size: 1.02rem;
+  font-size: 1rem;
   line-height: 1.2;
-  margin: 0 0 16px;
+  margin: 0 0 10px;
+  padding-right: 22px;
 }
 
 .clock-face {
@@ -465,9 +465,8 @@ button {
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  margin-bottom: 14px;
   position: relative;
-  width: 100%;
+  width: 88px;
 }
 
 .clock-ring {
@@ -505,6 +504,39 @@ button {
   z-index: 1;
 }
 
+.cockpit-frame {
+  inset: 0;
+  position: absolute;
+}
+
+.cockpit-top {
+  border-left: 1px solid rgba(122, 209, 255, 0.18);
+  border-right: 1px solid rgba(122, 209, 255, 0.18);
+  border-top: 1px solid rgba(122, 209, 255, 0.22);
+  border-top-left-radius: 220px;
+  border-top-right-radius: 220px;
+  height: 24%;
+  left: 16%;
+  position: absolute;
+  right: 16%;
+  top: 6%;
+}
+
+.cockpit-bottom {
+  background: linear-gradient(180deg, rgba(7, 11, 20, 0.2), rgba(7, 11, 20, 0.78));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  bottom: 0;
+  color: #dce4ef;
+  display: flex;
+  font-size: 0.82rem;
+  gap: 18px;
+  justify-content: center;
+  left: 0;
+  padding: 18px;
+  position: absolute;
+  right: 0;
+}
+
 .panel-section {
   background: rgba(8, 13, 24, 0.82);
   padding: 18px;
@@ -528,19 +560,6 @@ button {
 .panel-section__header h3,
 .panel-section p {
   margin: 0;
-}
-
-.panel-section p,
-.story-banner small,
-.view-pill small,
-.telemetry-footer p,
-.side-panel small {
-  color: var(--muted);
-  line-height: 1.56;
-}
-
-.panel-kicker {
-  margin-bottom: 6px;
 }
 
 .panel-badge {
@@ -673,57 +692,44 @@ button {
 }
 
 @media (max-width: 1280px) {
-  .status-panel--with-panel {
+  .status-panel,
+  .clock-panel--next-to-panel,
+  .panel-reveal--status-with-panel,
+  .panel-reveal--clock-next-to-panel {
     right: 20px;
-    top: 206px;
   }
 
-  .clock-panel--right {
-    right: 20px;
-    top: 520px;
+  .status-panel {
+    top: 182px;
+  }
+
+  .clock-panel--next-to-panel {
+    bottom: 160px;
   }
 }
 
 @media (max-width: 980px) {
   .side-panel-dock {
     justify-content: center;
-    padding: 20px 20px 100px;
+    padding: 20px 20px 98px;
   }
 
-  .side-panel-dock .side-panel {
+  .side-panel-shell {
     height: auto;
     max-height: min(62vh, 720px);
     width: min(100%, 720px);
   }
 
-  .status-panel,
-  .status-panel--with-panel {
+  .status-panel {
     left: 20px;
     right: 20px;
     top: auto;
     width: auto;
   }
 
-  .status-panel {
-    bottom: 20px;
-  }
-
-  .story-banner {
-    bottom: 274px;
-  }
-
-  .clock-panel {
-    top: auto;
-  }
-
-  .clock-panel--left {
-    bottom: 20px;
-    left: 20px;
-  }
-
-  .clock-panel--right {
-    bottom: 20px;
-    right: 20px;
+  .status-panel,
+  .panel-reveal--status-with-panel {
+    bottom: 160px;
   }
 }
 
@@ -734,10 +740,12 @@ button {
     width: calc(100vw - 28px);
   }
 
-  .view-pill {
-    left: 14px;
-    max-width: calc(100vw - 28px);
-    top: 196px;
+  .view-nav--floating {
+    flex-wrap: wrap;
+  }
+
+  .view-nav--floating button {
+    flex: 1 1 calc(50% - 10px);
   }
 
   .side-panel-dock {
@@ -745,32 +753,43 @@ button {
     padding: 14px;
   }
 
-  .side-panel-dock .side-panel {
-    border-radius: 24px;
-    max-height: 58vh;
+  .side-panel-shell {
+    max-height: 56vh;
+    width: 100%;
   }
 
-  .status-panel,
-  .status-panel--with-panel {
-    bottom: 14px;
+  .status-panel {
+    bottom: 144px;
     left: 14px;
     right: 14px;
   }
 
-  .story-banner {
-    bottom: 220px;
+  .clock-panel,
+  .clock-panel--next-to-panel,
+  .clock-panel--bottom-right,
+  .clock-panel--bottom-left {
+    bottom: 14px;
     left: 14px;
-    max-width: calc(100vw - 28px);
+    right: 14px;
+    width: auto;
+  }
+
+  .panel-reveal--clock-left,
+  .panel-reveal--clock-right,
+  .panel-reveal--clock-next-to-panel {
+    bottom: 14px;
+    right: 14px;
+  }
+
+  .panel-reveal--clock-left {
+    left: 14px;
+    right: auto;
   }
 
   .status-strip,
   .distance-readout,
   .metric-grid {
     grid-template-columns: 1fr;
-  }
-
-  .clock-panel {
-    display: none;
   }
 
   .cockpit-bottom {

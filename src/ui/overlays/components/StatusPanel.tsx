@@ -8,10 +8,13 @@ import {
 
 interface StatusPanelProps {
   state: SimulationState
-  hasSidePanel: boolean
+  onToggleVisibility: () => void
 }
 
-export function StatusPanel({ state, hasSidePanel }: StatusPanelProps) {
+export function StatusPanel({
+  state,
+  onToggleVisibility,
+}: StatusPanelProps) {
   const [activeHelp, setActiveHelp] = useState<StatusMetricKey | null>(null)
   const rs = state.blackHole.schwarzschildRadius || 1
   const nearDistanceRs = state.spacecraftNear.distance / rs
@@ -40,7 +43,16 @@ export function StatusPanel({ state, hasSidePanel }: StatusPanelProps) {
   ]
 
   return (
-    <section className={`status-panel${hasSidePanel ? " status-panel--with-panel" : ""}`}>
+    <section className="status-panel status-panel--with-panel">
+      <button
+        aria-label="Ocultar panel de datos en tiempo real"
+        className="panel-hide-button"
+        onClick={onToggleVisibility}
+        type="button"
+      >
+        ×
+      </button>
+
       <p className="eyebrow">Datos en tiempo real</p>
       <div className="status-strip">
         {metrics.map((metric) => {

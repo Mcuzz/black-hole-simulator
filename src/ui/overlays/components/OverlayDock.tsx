@@ -1,71 +1,64 @@
-import { VIEW_COPY } from "../../content/simulationCopy"
+import { useState } from "react"
 import type { SceneView } from "../../../render/scene/SimulationScene"
+import { VIEW_COPY } from "../../content/simulationCopy"
 
 interface OverlayDockProps {
   view: SceneView
   onChangeView: (view: SceneView) => void
-  showNearClock: boolean
-  showFarClock: boolean
-  showSidePanel: boolean
-  showViewInfo: boolean
-  showStatusPanel: boolean
-  showStoryPanel: boolean
-  onToggleNearClock: () => void
-  onToggleFarClock: () => void
-  onToggleSidePanel: () => void
-  onToggleViewInfo: () => void
-  onToggleStatusPanel: () => void
-  onToggleStoryPanel: () => void
+  onToggleVisibility: () => void
 }
 
-const RESOURCE_BUTTONS = [
-  { key: "showSidePanel", label: "Panel", toggleKey: "onToggleSidePanel" },
-  { key: "showViewInfo", label: "Vista", toggleKey: "onToggleViewInfo" },
-  { key: "showStatusPanel", label: "Metricas", toggleKey: "onToggleStatusPanel" },
-  { key: "showStoryPanel", label: "Historia", toggleKey: "onToggleStoryPanel" },
-  { key: "showNearClock", label: "Reloj cercano", toggleKey: "onToggleNearClock" },
-  { key: "showFarClock", label: "Reloj lejano", toggleKey: "onToggleFarClock" },
-] as const
+export function OverlayDock({
+  view,
+  onChangeView,
+  onToggleVisibility,
+}: OverlayDockProps) {
+  const [showDetails, setShowDetails] = useState(false)
+  const activeView = VIEW_COPY[view]
 
-export function OverlayDock(props: OverlayDockProps) {
   return (
-    <div className="overlay-dock">
-      <section className="dock-card">
+    <section className="overlay-dock">
+      <button
+        aria-label="Ocultar selector de vistas"
+        className="panel-hide-button"
+        onClick={onToggleVisibility}
+        type="button"
+      >
+        ×
+      </button>
+
+      <div className="view-dock__header">
         <p className="eyebrow">Vistas</p>
-        <div className="view-nav view-nav--floating">
-          {(Object.keys(VIEW_COPY) as SceneView[]).map((viewKey) => (
-            <button
-              key={viewKey}
-              className={props.view === viewKey ? "active" : ""}
-              onClick={() => props.onChangeView(viewKey)}
-              type="button"
-            >
-              {VIEW_COPY[viewKey].label}
-            </button>
-          ))}
-        </div>
-      </section>
+        <button
+          aria-expanded={showDetails}
+          className={`status-chip__help ${showDetails ? "active" : ""}`}
+          onClick={() => setShowDetails((current) => !current)}
+          type="button"
+        >
+          ?
+        </button>
+      </div>
 
-      <section className="dock-card">
-        <p className="eyebrow">Recursos</p>
-        <div className="resource-grid">
-          {RESOURCE_BUTTONS.map((resource) => {
-            const active = props[resource.key]
-            const onToggle = props[resource.toggleKey]
+      <div className="view-nav view-nav--floating">
+        {(Object.keys(VIEW_COPY) as SceneView[]).map((viewKey) => (
+          <button
+            key={viewKey}
+            className={view === viewKey ? "active" : ""}
+            onClick={() => onChangeView(viewKey)}
+            type="button"
+          >
+            {VIEW_COPY[viewKey].label}
+          </button>
+        ))}
+      </div>
 
-            return (
-              <button
-                key={resource.label}
-                className={`resource-toggle ${active ? "active" : ""}`}
-                onClick={onToggle}
-                type="button"
-              >
-                {active ? `Ocultar ${resource.label}` : `Mostrar ${resource.label}`}
-              </button>
-            )
-          })}
+      {showDetails && (
+        <div className="view-dock__details">
+          <span>{activeView.label}</span>
+          <strong>{activeView.title}</strong>
+          <small>{activeView.description}</small>
         </div>
-      </section>
-    </div>
+      )}
+    </section>
   )
 }

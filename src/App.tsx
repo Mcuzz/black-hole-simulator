@@ -17,16 +17,12 @@ export default function App() {
     setView,
     showNearClock,
     showFarClock,
-    showSidePanel,
     showViewInfo,
     showStatusPanel,
-    showStoryPanel,
     toggleNearClock,
     toggleFarClock,
-    toggleSidePanel,
     toggleViewInfo,
     toggleStatusPanel,
-    toggleStoryPanel,
   } = useViewState()
 
   const rs = state.blackHole.schwarzschildRadius
@@ -46,20 +42,16 @@ export default function App() {
           onChangeView={setView}
           showNearClock={showNearClock}
           showFarClock={showFarClock}
-          showSidePanel={showSidePanel}
           showViewInfo={showViewInfo}
           showStatusPanel={showStatusPanel}
-          showStoryPanel={showStoryPanel}
           onToggleNearClock={toggleNearClock}
           onToggleFarClock={toggleFarClock}
-          onToggleSidePanel={toggleSidePanel}
           onToggleViewInfo={toggleViewInfo}
           onToggleStatusPanel={toggleStatusPanel}
-          onToggleStoryPanel={toggleStoryPanel}
         />
 
-        {showSidePanel && (
-          <div className="side-panel-dock">
+        <div className="side-panel-dock">
+          <div className="side-panel-shell">
             <SidePanel
               maxDistance={maxDistance}
               minDistance={minDistance}
@@ -68,7 +60,7 @@ export default function App() {
               view={view}
             />
           </div>
-        )}
+        </div>
       </div>
 
       {showSplash && <SplashScreen onStart={() => setShowSplash(false)} />}
