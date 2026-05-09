@@ -1,7 +1,6 @@
 import type { SimulationState } from "../../core/state/simulationState"
 import type { SceneView } from "../../render/scene/SimulationScene"
 import { ClockPanel } from "../panels/ClockPanel"
-import { ControlPanel } from "../panels/ControlPanel/ControlPanel"
 import { OverlayDock } from "./components/OverlayDock"
 import { StatusPanel } from "./components/StatusPanel"
 
@@ -9,38 +8,28 @@ interface SceneOverlayProps {
   state: SimulationState
   view: SceneView
   onChangeView: (view: SceneView) => void
-  minDistance: number
-  maxDistance: number
-  onTargetDistanceChange: (distance: number) => void
   showNearClock: boolean
   showFarClock: boolean
   showViewInfo: boolean
   showStatusPanel: boolean
-  showControlPanel: boolean
   onToggleNearClock: () => void
   onToggleFarClock: () => void
   onToggleViewInfo: () => void
   onToggleStatusPanel: () => void
-  onToggleControlPanel: () => void
 }
 
 export function SceneOverlay({
   state,
   view,
   onChangeView,
-  minDistance,
-  maxDistance,
-  onTargetDistanceChange,
   showNearClock,
   showFarClock,
   showViewInfo,
   showStatusPanel,
-  showControlPanel,
   onToggleNearClock,
   onToggleFarClock,
   onToggleViewInfo,
   onToggleStatusPanel,
-  onToggleControlPanel,
 }: SceneOverlayProps) {
   const clockGap = Math.max(
     0,
@@ -50,7 +39,7 @@ export function SceneOverlay({
   return (
     <div className="scene-overlay">
 
-      {/* ── Vista selector (top-left) ── */}
+      {/* ── Selector de vistas — arriba izquierda ── */}
       {showViewInfo ? (
         <OverlayDock
           onChangeView={onChangeView}
@@ -67,7 +56,7 @@ export function SceneOverlay({
         </button>
       )}
 
-      {/* ── Status panel (top-right) ── */}
+      {/* ── Status panel — arriba derecha ── */}
       {showStatusPanel ? (
         <StatusPanel
           onToggleVisibility={onToggleStatusPanel}
@@ -83,26 +72,7 @@ export function SceneOverlay({
         </button>
       )}
 
-      {/* ── Control panel (debajo del status, mismo lado) ── */}
-      {showControlPanel ? (
-        <ControlPanel
-          state={state}
-          minDistance={minDistance}
-          maxDistance={maxDistance}
-          onTargetDistanceChange={onTargetDistanceChange}
-          onToggleVisibility={onToggleControlPanel}
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--control"
-          onClick={onToggleControlPanel}
-          type="button"
-        >
-          Control
-        </button>
-      )}
-
-      {/* ── Relojes: columna izquierda inferior, apilados verticalmente ── */}
+      {/* ── Reloj lejano — columna izquierda, encima del cercano ── */}
       {showFarClock ? (
         <ClockPanel
           className="clock-panel clock-panel--left-upper"
@@ -122,6 +92,7 @@ export function SceneOverlay({
         </button>
       )}
 
+      {/* ── Reloj cercano — columna izquierda, inferior ── */}
       {showNearClock ? (
         <ClockPanel
           className="clock-panel clock-panel--left-lower"
@@ -141,7 +112,7 @@ export function SceneOverlay({
         </button>
       )}
 
-      {/* ── Cockpit frame (solo vista near) ── */}
+      {/* ── Cockpit (solo vista near) ── */}
       {view === "near" && (
         <div className="cockpit-frame" aria-hidden="true">
           <div className="cockpit-top" />

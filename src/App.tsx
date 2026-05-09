@@ -19,12 +19,10 @@ export default function App() {
     showFarClock,
     showViewInfo,
     showStatusPanel,
-    showControlPanel,
     toggleNearClock,
     toggleFarClock,
     toggleViewInfo,
     toggleStatusPanel,
-    toggleControlPanel,
   } = useViewState()
 
   const rs = state.blackHole.schwarzschildRadius
@@ -46,24 +44,25 @@ export default function App() {
           state={state}
           view={view}
           onChangeView={setView}
-          minDistance={minDistance}
-          maxDistance={maxDistance}
-          onTargetDistanceChange={(d) => engine.setTargetDistance(d)}
           showNearClock={showNearClock}
           showFarClock={showFarClock}
           showViewInfo={showViewInfo}
           showStatusPanel={showStatusPanel}
-          showControlPanel={showControlPanel}
           onToggleNearClock={toggleNearClock}
           onToggleFarClock={toggleFarClock}
           onToggleViewInfo={toggleViewInfo}
           onToggleStatusPanel={toggleStatusPanel}
-          onToggleControlPanel={toggleControlPanel}
         />
 
         <div className="side-panel-dock">
           <div className="side-panel-shell">
-            <SidePanel state={state} view={view} />
+            <SidePanel
+              state={state}
+              view={view}
+              minDistance={minDistance}
+              maxDistance={maxDistance}
+              onTargetDistanceChange={(d) => engine.setTargetDistance(d)}
+            />
           </div>
         </div>
       </div>
