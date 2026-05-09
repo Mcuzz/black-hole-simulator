@@ -19,10 +19,12 @@ export default function App() {
     showFarClock,
     showViewInfo,
     showStatusPanel,
+    showControlPanel,
     toggleNearClock,
     toggleFarClock,
     toggleViewInfo,
     toggleStatusPanel,
+    toggleControlPanel,
   } = useViewState()
 
   const rs = state.blackHole.schwarzschildRadius
@@ -30,8 +32,12 @@ export default function App() {
   const maxDistance = state.spacecraftFar.distance * 0.92
 
   return (
-    <div className={`app-shell view-${view}${showSplash ? " app-shell--locked" : ""}`}>
-      <div className={`scene-window scene-window--immersive scene-window--${view}`}>
+    <div
+      className={`app-shell view-${view}${showSplash ? " app-shell--locked" : ""}`}
+    >
+      <div
+        className={`scene-window scene-window--immersive scene-window--${view}`}
+      >
         <Canvas camera={{ position: [11, 6, 12], fov: 52 }}>
           <SimulationScene view={view} />
         </Canvas>
@@ -40,25 +46,24 @@ export default function App() {
           state={state}
           view={view}
           onChangeView={setView}
+          minDistance={minDistance}
+          maxDistance={maxDistance}
+          onTargetDistanceChange={(d) => engine.setTargetDistance(d)}
           showNearClock={showNearClock}
           showFarClock={showFarClock}
           showViewInfo={showViewInfo}
           showStatusPanel={showStatusPanel}
+          showControlPanel={showControlPanel}
           onToggleNearClock={toggleNearClock}
           onToggleFarClock={toggleFarClock}
           onToggleViewInfo={toggleViewInfo}
           onToggleStatusPanel={toggleStatusPanel}
+          onToggleControlPanel={toggleControlPanel}
         />
 
         <div className="side-panel-dock">
           <div className="side-panel-shell">
-            <SidePanel
-              maxDistance={maxDistance}
-              minDistance={minDistance}
-              onTargetDistanceChange={(distance) => engine.setTargetDistance(distance)}
-              state={state}
-              view={view}
-            />
+            <SidePanel state={state} view={view} />
           </div>
         </div>
       </div>

@@ -31,5 +31,10 @@ export function usePhysicsMetrics(state: SimulationState) {
     clockFar: state.clocks.farObserverTime,
     nearRate: state.clocks.nearRate,
     clockGap: state.clocks.farObserverTime - state.clocks.nearObserverTime,
+    // Radiación de Hawking
+    hawkingTemperature: state.effects.hawkingTemperature,
+    evaporationRate: state.effects.evaporationRate,
+    hawkingGlowIntensity: state.effects.hawkingGlowIntensity,
+    blackHoleMass: state.blackHole.mass,
   }
 }

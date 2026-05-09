@@ -35,4 +35,10 @@ export interface PhysicsEffectsState {
   spaghettificationFactor: number
   horizonProximity: number
   region: "safe" | "strong" | "photon-sphere" | "horizon"
+  /** Temperatura de Hawking del agujero negro (unidades normalizadas) */
+  hawkingTemperature: number
+  /** Tasa de evaporación de masa (valor absoluto, escalado para UI) */
+  evaporationRate: number
+  /** Intensidad del halo visual de Hawking (0–1) */
+  hawkingGlowIntensity: number
 }

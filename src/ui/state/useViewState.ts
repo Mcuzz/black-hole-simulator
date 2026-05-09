@@ -7,6 +7,7 @@ export function useViewState() {
   const [showFarClock, setShowFarClock] = useState(true)
   const [showViewInfo, setShowViewInfo] = useState(true)
   const [showStatusPanel, setShowStatusPanel] = useState(true)
+  const [showControlPanel, setShowControlPanel] = useState(true)
 
   return {
     view,
@@ -15,9 +16,11 @@ export function useViewState() {
     showFarClock,
     showViewInfo,
     showStatusPanel,
-    toggleNearClock: () => setShowNearClock((value) => !value),
-    toggleFarClock: () => setShowFarClock((value) => !value),
-    toggleViewInfo: () => setShowViewInfo((value) => !value),
-    toggleStatusPanel: () => setShowStatusPanel((value) => !value),
+    showControlPanel,
+    toggleNearClock: () => setShowNearClock((v) => !v),
+    toggleFarClock: () => setShowFarClock((v) => !v),
+    toggleViewInfo: () => setShowViewInfo((v) => !v),
+    toggleStatusPanel: () => setShowStatusPanel((v) => !v),
+    toggleControlPanel: () => setShowControlPanel((v) => !v),
   }
 }

@@ -1,51 +1,19 @@
-import { useState } from "react"
 import type { SimulationState } from "../../../core/state/simulationState"
-import {
-  REGION_LABELS,
-  STATUS_HELP_COPY,
-  type StatusMetricKey,
-} from "../../content/simulationCopy"
+import { REGION_LABELS } from "../../content/simulationCopy"
 
 interface StatusPanelProps {
   state: SimulationState
   onToggleVisibility: () => void
 }
 
-export function StatusPanel({
-  state,
-  onToggleVisibility,
-}: StatusPanelProps) {
-  const [activeHelp, setActiveHelp] = useState<StatusMetricKey | null>(null)
+export function StatusPanel({ state, onToggleVisibility }: StatusPanelProps) {
   const rs = state.blackHole.schwarzschildRadius || 1
   const nearDistanceRs = state.spacecraftNear.distance / rs
-  const metrics: Array<{
-    key: StatusMetricKey
-    value: string
-  }> = [
-    {
-      key: "region",
-      value: REGION_LABELS[state.effects.region],
-    },
-    {
-      key: "distance",
-      value: `${nearDistanceRs.toFixed(2)} r_s`,
-    },
-    {
-      key: "timeDilation",
-      value: state.effects.timeDilation.toFixed(3),
-    },
-    {
-      key: "redshift",
-      value: Number.isFinite(state.effects.gravitationalRedshift)
-        ? state.effects.gravitationalRedshift.toFixed(3)
-        : "∞",
-    },
-  ]
 
   return (
     <section className="status-panel status-panel--with-panel">
       <button
-        aria-label="Ocultar panel de datos en tiempo real"
+        aria-label="Ocultar panel de estado"
         className="panel-hide-button"
         onClick={onToggleVisibility}
         type="button"
@@ -53,36 +21,17 @@ export function StatusPanel({
         ×
       </button>
 
-      <p className="eyebrow">Datos en tiempo real</p>
-      <div className="status-strip">
-        {metrics.map((metric) => {
-          const helpCopy = STATUS_HELP_COPY[metric.key]
-          const isOpen = activeHelp === metric.key
+      <p className="eyebrow">Estado</p>
 
-          return (
-            <article className="status-chip" key={metric.key}>
-              <div className="status-chip__header">
-                <span>{helpCopy.label}</span>
-                <button
-                  aria-expanded={isOpen}
-                  className={`status-chip__help ${isOpen ? "active" : ""}`}
-                  onClick={() =>
-                    setActiveHelp((current) =>
-                      current === metric.key ? null : metric.key,
-                    )
-                  }
-                  type="button"
-                >
-                  ?
-                </button>
-              </div>
-
-              <strong>{metric.value}</strong>
-
-              {isOpen && <p className="status-chip__tooltip">{helpCopy.help}</p>}
-            </article>
-          )
-        })}
+      <div className="status-strip status-strip--compact">
+        <article className="status-chip">
+          <span>Región</span>
+          <strong>{REGION_LABELS[state.effects.region]}</strong>
+        </article>
+        <article className="status-chip">
+          <span>Distancia</span>
+          <strong>{nearDistanceRs.toFixed(2)} r_s</strong>
+        </article>
       </div>
     </section>
   )

@@ -766,8 +766,7 @@ button {
 
   .clock-panel,
   .clock-panel--next-to-panel,
-  .clock-panel--bottom-right,
-  .clock-panel--bottom-left {
+  .clock-panel--bottom-right {
     bottom: 14px;
     left: 14px;
     right: 14px;
@@ -798,3 +797,365 @@ button {
     text-align: center;
   }
 }
+
+/* ya son un vrgo ayuda */
+
+
+/* ============================
+   Side Panel — Tab Navigation
+   ============================ */
+
+.side-panel__tabs {
+  display: flex;
+  gap: 6px;
+  padding: 14px 14px 0;
+  border-bottom: 1px solid var(--panel-line);
+  background: rgba(8, 13, 24, 0.6);
+  border-radius: 28px 28px 0 0;
+  flex-shrink: 0;
+}
+
+.side-panel__tab {
+  flex: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 10px 8px;
+  text-align: center;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.side-panel__tab:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.side-panel__tab.active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 106, 42, 0.18),
+    rgba(255, 179, 90, 0.12)
+  );
+  border-color: rgba(255, 179, 90, 0.28);
+  color: var(--amber);
+}
+
+
+
+
+/* ── View note ── */
+.panel-view-note {
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--panel-line);
+  background: rgba(4, 8, 16, 0.5);
+}
+
+.panel-view-note small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PATCH CSS —
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Relojes: columna izquierda apilados ─────────────────── */
+
+/* Reloj lejano — superior izquierda */
+.clock-panel--left-upper {
+  bottom: auto;
+  left: 20px;
+  right: auto;
+  top: auto;
+  bottom: calc(20px + 126px + 14px); /* encima del lower */
+}
+
+/* Reloj cercano — inferior izquierda */
+.clock-panel--left-lower {
+  bottom: 20px;
+  left: 20px;
+  right: auto;
+}
+
+/* Botones reveal para relojes en columna izquierda */
+.panel-reveal--clock-far-left {
+  bottom: calc(20px + 48px + 14px);
+  left: 20px;
+}
+
+.panel-reveal--clock-near-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+/* Anular posicionamiento anterior de relojes right */
+.clock-panel--bottom-right,
+.clock-panel--next-to-panel {
+  right: auto;
+  left: 20px;
+}
+
+/* ─── ControlPanel flotante ───────────────────────────────── */
+
+.control-panel {
+  backdrop-filter: blur(16px);
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 16px 18px 14px;
+  pointer-events: auto;
+  position: absolute;
+  /* Debajo del StatusPanel, mismo lado derecho */
+  right: 460px;
+  top: 108px;          /* status ~88px de alto + 20px gap */
+  width: min(300px, calc(100vw - 40px));
+}
+
+.control-panel .eyebrow {
+  margin-bottom: 6px;
+}
+
+.control-panel__distance {
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
+}
+
+/* Botón reveal para control */
+.panel-reveal--control {
+  right: 460px;
+  top: 108px;
+}
+
+/* ─── StatusPanel reducido ────────────────────────────────── */
+
+.status-strip--compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ─── Phenomenon tabs ─────────────────────────────────────── */
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.phenomenon-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: rgba(4, 8, 16, 0.9);
+  border-bottom: 1px solid var(--panel-line);
+  border-radius: 28px 28px 0 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.phenomenon-tab {
+  padding: 11px 4px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--panel-line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.phenomenon-tab:last-child {
+  border-right: none;
+}
+
+.phenomenon-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+/* Línea inferior de acento */
+.phenomenon-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.phenomenon-tab.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Acento según región física activa */
+.phenomenon-tab.active.active--safe {
+  background: rgba(103, 211, 159, 0.07);
+  color: #baf7db;
+}
+.phenomenon-tab.active.active--safe::after { background: #67d39f; }
+
+.phenomenon-tab.active.active--strong {
+  background: rgba(255, 179, 90, 0.07);
+  color: var(--amber);
+}
+.phenomenon-tab.active.active--strong::after { background: var(--amber); }
+
+.phenomenon-tab.active.active--photon-sphere {
+  background: rgba(122, 209, 255, 0.07);
+  color: #9dd8ff;
+}
+.phenomenon-tab.active.active--photon-sphere::after { background: #7ad1ff; }
+
+.phenomenon-tab.active.active--horizon {
+  background: rgba(255, 97, 97, 0.08);
+  color: #ffc1c1;
+}
+.phenomenon-tab.active.active--horizon::after { background: #ff6161; }
+
+/* ─── Nota de vista ───────────────────────────────────────── */
+
+.panel-view-note {
+  padding: 7px 18px;
+  border-bottom: 1px solid var(--panel-line);
+  background: rgba(4, 8, 16, 0.5);
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+/* ─── Contenido scrolleable ───────────────────────────────── */
+
+.phenomenon-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.phenomenon-content::-webkit-scrollbar { width: 6px; }
+.phenomenon-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+.phenomenon-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ─── Equation card mejorado ──────────────────────────────── */
+
+.equation-card {
+  background: rgba(5, 9, 16, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.equation-card strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.02em;
+}
+
+.equation-card small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+
+.equation-card small:last-child {
+  margin-bottom: 0;
+}
+
+.equation-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.equation-values span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 3px 8px;
+}
+
+.equation-result {
+  color: var(--amber) !important;
+  font-weight: 700;
+}
+
+/* ─── Responsive ajustes ──────────────────────────────────── */
+
+@media (max-width: 1280px) {
+  .control-panel,
+  .panel-reveal--control {
+    right: 20px;
+    top: auto;
+    bottom: 160px;
+  }
+}
+
+@media (max-width: 980px) {
+  .control-panel {
+    left: 20px;
+    right: 20px;
+    width: auto;
+    bottom: 200px;
+    top: auto;
+  }
+
+  .clock-panel--left-upper,
+  .clock-panel--left-lower {
+    left: 14px;
+    right: 14px;
+    width: auto;
+  }
+
+  .clock-panel--left-upper {
+    bottom: calc(14px + 126px + 12px);
+  }
+
+  .clock-panel--left-lower {
+    bottom: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .phenomenon-tab {
+    font-size: 0.64rem;
+    padding: 10px 2px;
+  }
+}
+

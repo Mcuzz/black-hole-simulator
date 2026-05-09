@@ -4,6 +4,7 @@ import AccretionDisk from "../objects/AccretionDisk"
 import BlackHole from "../objects/BlackHole"
 import Spacecraft from "../objects/Spacecraft"
 import { SkySphere } from "../environment/SkySphere"
+import { HawkingParticles } from "../objects/HawkingParticles"
 import { useSimulationEngine } from "../hooks/useSimulationEngine"
 import { SceneCameraRig } from "./SceneCameraRig"
 
@@ -12,7 +13,6 @@ interface SimulationSceneProps {
 }
 
 export function SimulationScene({ view }: SimulationSceneProps) {
-
   const engine = useSimulationEngine()
 
   useFrame((_, delta) => {
@@ -36,6 +36,7 @@ export function SimulationScene({ view }: SimulationSceneProps) {
       <AccretionDisk />
       <Spacecraft type="near" />
       <Spacecraft type="far" />
+      <HawkingParticles />
       <SkySphere />
     </>
   )

@@ -10,24 +10,19 @@ import { SIMULATION_CONFIG } from "../../config/simulationConfig"
 import type { SimulationState } from "./simulationState"
 import { RENDER_SCALE } from "../units/renderScale"
 import type { PhysicsEffectsState } from "./simulationState"
-
-
 import { computeSchwarzschildRadius } from "../../physics/relativity"
+import {
+  computeHawkingTemperature,
+  computeEvaporationRate,
+} from "../../physics/schwarzschildPhysics"
 
-/**
- * Crea el estado inicial del simulador
- */
 export function createInitialSimulationState(): SimulationState {
-
-  const mass = SIMULATION_CONFIG.blackHoleMass;
-
-  const schwarzschildRadius = computeSchwarzschildRadius(mass);
-
+  const mass = SIMULATION_CONFIG.blackHoleMass
+  const schwarzschildRadius = computeSchwarzschildRadius(mass)
   const nearDistance =
-    SIMULATION_CONFIG.initialNearObserverDistance * schwarzschildRadius;
-
+    SIMULATION_CONFIG.initialNearObserverDistance * schwarzschildRadius
   const farDistance =
-    SIMULATION_CONFIG.farObserverDistance * schwarzschildRadius;
+    SIMULATION_CONFIG.farObserverDistance * schwarzschildRadius
 
   const initialEffects: PhysicsEffectsState = {
     lensingStrength: 0,
@@ -36,40 +31,27 @@ export function createInitialSimulationState(): SimulationState {
     photonSphereRegion: false,
     spaghettificationFactor: 0,
     horizonProximity: 0,
-    region: "safe"
-  };
+    region: "safe",
+    hawkingTemperature: computeHawkingTemperature(schwarzschildRadius),
+    evaporationRate: computeEvaporationRate(mass),
+    hawkingGlowIntensity: 0,
+  }
 
-  const state: SimulationState = {
-
+  return {
     globalTime: 0,
-
-    blackHole: {
-      mass,
-      schwarzschildRadius
-    },
-
+    blackHole: { mass, schwarzschildRadius },
     spacecraftNear: {
       distance: nearDistance,
       position: [nearDistance * RENDER_SCALE, 0, 0],
-      radialVelocity: 0
+      radialVelocity: 0,
     },
-
     spacecraftFar: {
       distance: farDistance,
       position: [farDistance * RENDER_SCALE, 0, 0],
-      radialVelocity: 0
+      radialVelocity: 0,
     },
-
-    clocks: {
-      nearObserverTime: 0,
-      farObserverTime: 0,
-      nearRate: 1
-    },
-
+    clocks: { nearObserverTime: 0, farObserverTime: 0, nearRate: 1 },
     effects: initialEffects,
-
-    targetDistance: nearDistance
-  };
-
-  return state;
+    targetDistance: nearDistance,
+  }
 }

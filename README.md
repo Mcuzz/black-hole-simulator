@@ -141,7 +141,10 @@ No forman parte del flujo principal actual, pero se conservaron para evitar rupt
 
 Posibles siguientes pasos:
 
+- Incorporar vistas de cabinas de cada nave espacial, visibles en primera persona para el usuario, arte visual hecho por mi. 
+- Incorporar mas variables fisicas actualizables.
 - Dividir el bundle 3D para reducir el chunk de `@react-three/drei`.
 - Agregar pruebas unitarias a fisica y resolucion de regiones.
 - Incorporar una documentacion visual con capturas o GIFs del simulador.
 - Extender el modelo a agujeros negros rotantes como una fase posterior.
+- Reducir el gasto de recorsos que pueda consumir la aplicacion, pues su objetivo es ser un programa relativamente liviano. 
