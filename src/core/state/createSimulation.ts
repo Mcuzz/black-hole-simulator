@@ -8,13 +8,13 @@
 
 import { SIMULATION_CONFIG } from "../../config/simulationConfig"
 import type { SimulationState } from "./simulationState"
-import { RENDER_SCALE } from "../units/renderScale"
 import type { PhysicsEffectsState } from "./simulationState"
 import { computeSchwarzschildRadius } from "../../physics/relativity"
 import {
   computeHawkingTemperature,
   computeEvaporationRate,
 } from "../../physics/schwarzschildPhysics"
+import { mapDistanceToRenderRadius } from "../units/renderScale"
 
 export function createInitialSimulationState(): SimulationState {
   const mass = SIMULATION_CONFIG.blackHoleMass
@@ -42,12 +42,20 @@ export function createInitialSimulationState(): SimulationState {
     blackHole: { mass, schwarzschildRadius },
     spacecraftNear: {
       distance: nearDistance,
-      position: [nearDistance * RENDER_SCALE, 0, 0],
+      position: [
+        mapDistanceToRenderRadius(nearDistance, schwarzschildRadius, farDistance),
+        0,
+        0,
+      ],
       radialVelocity: 0,
     },
     spacecraftFar: {
       distance: farDistance,
-      position: [farDistance * RENDER_SCALE, 0, 0],
+      position: [
+        mapDistanceToRenderRadius(farDistance, schwarzschildRadius, farDistance),
+        0,
+        0,
+      ],
       radialVelocity: 0,
     },
     clocks: { nearObserverTime: 0, farObserverTime: 0, nearRate: 1 },

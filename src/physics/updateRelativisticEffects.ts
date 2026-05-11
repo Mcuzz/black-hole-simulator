@@ -1,4 +1,5 @@
 import type { SimulationState } from "../core/state/simulationState"
+import { getDistanceThresholds } from "../core/units/renderScale"
 import { computeLensingStrength } from "./gravitationalLensing"
 import {
   computeRedshift,
@@ -8,13 +9,13 @@ import {
   computeEvaporationRate,
   computeHawkingGlowIntensity,
 } from "./schwarzschildPhysics"
-import { REGION_THRESHOLDS, resolveRegion } from "./regionResolver"
+import { resolveRegion } from "./regionResolver"
 
 export function updateRelativisticEffects(state: SimulationState) {
   const distance = state.spacecraftNear.distance
   const rs = state.blackHole.schwarzschildRadius
   const mass = state.blackHole.mass
-  const distanceRatio = distance / rs
+  const thresholds = getDistanceThresholds(rs)
 
   state.effects.lensingStrength = computeLensingStrength(distance, rs)
   state.effects.timeDilation = computeTimeDilation(rs, distance)
@@ -35,13 +36,12 @@ export function updateRelativisticEffects(state: SimulationState) {
   const clamp = (v: number, min: number, max: number) =>
     Math.min(max, Math.max(min, v))
 
-  const visualStart = REGION_THRESHOLDS.strong
-  const visualEnd = REGION_THRESHOLDS.horizon
-  const t = (distanceRatio - visualEnd) / (visualStart - visualEnd)
+  const t =
+    (distance - thresholds.horizon) /
+    Math.max(thresholds.strong - thresholds.horizon, 1e-6)
 
   state.effects.horizonProximity = clamp(1 - t, 0, 1)
-  state.effects.photonSphereRegion =
-    distanceRatio <= REGION_THRESHOLDS.photonSphere
-  state.effects.region = resolveRegion(distanceRatio)
+  state.effects.photonSphereRegion = distance <= thresholds.photonSphere
+  state.effects.region = resolveRegion(distance, rs)
   state.clocks.nearRate = state.effects.timeDilation
 }

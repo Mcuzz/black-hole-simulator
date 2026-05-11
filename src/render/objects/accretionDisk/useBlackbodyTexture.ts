@@ -21,7 +21,7 @@ export function useBlackbodyTexture(): Texture | null {
     let cancelled = false
 
     new TextureLoader().load(
-      "/textures/blackbody.png",
+      "./textures/blackbody.png",
       (nextTexture) => {
         configureLookupTexture(nextTexture)
         if (!cancelled) {

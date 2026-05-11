@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useSimulationEngine } from "../hooks/useSimulationEngine"
+import { BLACK_HOLE_VISUAL_RADIUS } from "../../core/units/renderScale"
 
 const PARTICLE_COUNT = 160
 
@@ -25,7 +26,7 @@ function createParticles(): Particle[] {
 
 export function HawkingParticles() {
   const engine = useSimulationEngine()
-  const blackHoleVisualRadius = 1.92
+  const blackHoleVisualRadius = BLACK_HOLE_VISUAL_RADIUS
 
   const geometry = useMemo(() => new THREE.BufferGeometry(), [])
   const material = useMemo(

@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { useMemo, useRef } from "react"
 import type { Mesh } from "three"
 import * as THREE from "three"
+import { BLACK_HOLE_VISUAL_RADIUS } from "../../core/units/renderScale"
 
 function createHaloTexture({
   innerRadius,
@@ -156,7 +157,7 @@ export default function BlackHole() {
   return (
     <group position={[0, 0, 0]}>
       <mesh ref={coreRef}>
-        <sphereGeometry args={[1.92, 96, 96]} />
+        <sphereGeometry args={[BLACK_HOLE_VISUAL_RADIUS, 96, 96]} />
         <meshStandardMaterial
           color="#010102"
           emissive="#020204"
@@ -166,7 +167,7 @@ export default function BlackHole() {
       </mesh>
 
       <mesh ref={coreRimRef} scale={1.035}>
-        <sphereGeometry args={[1.92, 96, 96]} />
+        <sphereGeometry args={[BLACK_HOLE_VISUAL_RADIUS, 96, 96]} />
         <meshBasicMaterial
           blending={THREE.AdditiveBlending}
           color="#ffca68"

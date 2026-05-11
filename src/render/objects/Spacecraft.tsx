@@ -10,6 +10,7 @@ import type {
 import * as THREE from "three";
 
 import { useSimulationEngine } from "../hooks/useSimulationEngine";
+import { BLACK_HOLE_VISUAL_RADIUS } from "../../core/units/renderScale";
 
 interface Props {
   type: "near" | "far";
@@ -180,10 +181,15 @@ export default function Spacecraft({
       1
     );
 
+    const baseScale =
+      type === "near"
+        ? BLACK_HOLE_VISUAL_RADIUS * 0.23
+        : BLACK_HOLE_VISUAL_RADIUS * 0.19;
+
     groupRef.current.scale.set(
-      stretch,
-      squeeze,
-      squeeze
+      baseScale * stretch,
+      baseScale * squeeze,
+      baseScale * squeeze
     );
 
     // =========================

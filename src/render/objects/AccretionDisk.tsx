@@ -4,51 +4,64 @@ import {
   ACCRETION_DISK_LAYERS,
   ACCRETION_DISK_ROTATION,
 } from "./accretionDisk/config"
-import { createAccretionDiskMesh } from "./accretionDisk/mesh"
+import {
+  createAccretionDiskLayerMeshes,
+  disposeAccretionDiskMeshes,
+} from "./accretionDisk/mesh"
 import {
   applyBlackbodyTexture,
-  disposeAccretionDiskMesh,
   updateAccretionDiskTime,
 } from "./accretionDisk/material"
 import { useBlackbodyTexture } from "./accretionDisk/useBlackbodyTexture"
 
 export default function AccretionDisk() {
-  const mainMesh = useMemo(
-    () => createAccretionDiskMesh(ACCRETION_DISK_LAYERS.main, 5),
+  const mainMeshes = useMemo(
+    () => createAccretionDiskLayerMeshes(ACCRETION_DISK_LAYERS.main, 10),
     [],
   )
-  const hazeMesh = useMemo(
-    () => createAccretionDiskMesh(ACCRETION_DISK_LAYERS.haze, 4),
+  const hazeMeshes = useMemo(
+    () => createAccretionDiskLayerMeshes(ACCRETION_DISK_LAYERS.haze, 2),
+    [],
+  )
+  const wrapMeshes = useMemo(
+    () => createAccretionDiskLayerMeshes(ACCRETION_DISK_LAYERS.wrap, 24),
     [],
   )
   const blackbodyTexture = useBlackbodyTexture()
+  const allMeshes = useMemo(
+    () => [...hazeMeshes, ...mainMeshes, ...wrapMeshes],
+    [hazeMeshes, mainMeshes, wrapMeshes],
+  )
 
   useEffect(() => {
     return () => {
-      disposeAccretionDiskMesh(mainMesh)
-      disposeAccretionDiskMesh(hazeMesh)
+      disposeAccretionDiskMeshes(allMeshes)
     }
-  }, [hazeMesh, mainMesh])
+  }, [allMeshes])
 
   useEffect(() => {
     if (!blackbodyTexture) {
       return
     }
 
-    applyBlackbodyTexture(mainMesh, blackbodyTexture)
-    applyBlackbodyTexture(hazeMesh, blackbodyTexture)
-  }, [blackbodyTexture, hazeMesh, mainMesh])
+    for (const mesh of allMeshes) {
+      applyBlackbodyTexture(mesh, blackbodyTexture)
+    }
+  }, [allMeshes, blackbodyTexture])
 
   useFrame(({ clock }) => {
     const elapsedTime = clock.getElapsedTime()
-    updateAccretionDiskTime(mainMesh, elapsedTime)
-    updateAccretionDiskTime(hazeMesh, elapsedTime)
+
+    for (const mesh of allMeshes) {
+      updateAccretionDiskTime(mesh, elapsedTime)
+    }
   })
 
   return (
     <group rotation={ACCRETION_DISK_ROTATION}>
-      <primitive object={mainMesh} />
-      <primitive object={hazeMesh} />
+      {allMeshes.map((mesh) => (
+        <primitive key={mesh.uuid} object={mesh} />
+      ))}
     </group>
   )
 }

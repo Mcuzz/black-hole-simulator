@@ -1,3 +1,5 @@
+import { BLACK_HOLE_VISUAL_RADIUS } from "../../../core/units/renderScale"
+
 export interface AccretionDiskLayerConfig {
   inner: number
   outer: number
@@ -8,38 +10,64 @@ export interface AccretionDiskLayerConfig {
   circulation: number
   speed: number
   opacity: number
+  thickness: number
+  slices: number
+  radialTaper: number
+  verticalOpacityBias: number
 }
 
 export const ACCRETION_DISK_LAYERS: Record<
-  "main" | "haze",
+  "main" | "haze" | "wrap",
   AccretionDiskLayerConfig
 > = {
   main: {
-    inner: 2.48,
-    outer: 6.72,
-    segments: 200,
-    maxTemp: 9500,
-    beamExponent: 1.2,
-    noiseScale: 1.52,
-    circulation: 1.5,
-    speed: 0.065,
-    opacity: 2.56,
+    inner: 2.5,
+    outer: 6.3,
+    segments: 220,
+    maxTemp: 9800,
+    beamExponent: 1.45,
+    noiseScale: 1.15,
+    circulation: 1.35,
+    speed: 0.06,
+    opacity: 0.42,
+    thickness: 0.34,
+    slices: 7,
+    radialTaper: 0.05,
+    verticalOpacityBias: 0.72,
   },
   haze: {
     inner: 2.35,
-    outer: 5.45,
-    segments: 160,
-    maxTemp: 5500,
-    beamExponent: 1.5,
-    noiseScale: 0.98,
+    outer: 7.2,
+    segments: 180,
+    maxTemp: 6200,
+    beamExponent: 1.1,
+    noiseScale: 0.78,
     circulation: 0.75,
-    speed: 0.04,
-    opacity: 9,
+    speed: 0.036,
+    opacity: 0.12,
+    thickness: 0.78,
+    slices: 9,
+    radialTaper: 0.09,
+    verticalOpacityBias: 0.52,
   },
-  
+  wrap: {
+    inner: 2.12,
+    outer: 3.45,
+    segments: 180,
+    maxTemp: 10400,
+    beamExponent: 1.85,
+    noiseScale: 0.94,
+    circulation: 1.8,
+    speed: 0.072,
+    opacity: 0.24,
+    thickness: 1.08,
+    slices: 5,
+    radialTaper: 0.16,
+    verticalOpacityBias: 0.84,
+  },
 }
 
-export const EVENT_HORIZON_VISUAL_RADIUS = 1.92
+export const EVENT_HORIZON_VISUAL_RADIUS = BLACK_HOLE_VISUAL_RADIUS
 
 // A slight tilt keeps the ring readable in every camera mode.
 export const ACCRETION_DISK_ROTATION: [number, number, number] = [
