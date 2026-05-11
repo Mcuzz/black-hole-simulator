@@ -1373,3 +1373,37 @@ button {
 
   .eq-var__symbol { min-width: 42px; }
 }
+
+/* Math and equation presentation */
+.equation-card__formula {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.math-formula {
+  color: var(--text);
+  display: block;
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.math-formula--inline {
+  display: inline;
+  font-size: 0.9rem;
+}
+
+.math-formula sub,
+.math-formula sup,
+.control-distance-badge sub,
+.control-unit-note sub,
+.distance-actions sub {
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+.eq-var__symbol .math-formula {
+  color: var(--amber);
+}

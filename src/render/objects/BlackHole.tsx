@@ -161,7 +161,7 @@ export default function BlackHole() {
           color="#010102"
           emissive="#020204"
           emissiveIntensity={0.08}
-          roughness={1}
+          roughness={1} 
         />
       </mesh>
 

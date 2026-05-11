@@ -25,6 +25,7 @@ function createParticles(): Particle[] {
 
 export function HawkingParticles() {
   const engine = useSimulationEngine()
+  const blackHoleVisualRadius = 1.92
 
   const geometry = useMemo(() => new THREE.BufferGeometry(), [])
   const material = useMemo(
@@ -66,7 +67,6 @@ export function HawkingParticles() {
 
   useFrame((_, delta) => {
     const state = engine.getState()
-    const rs = state.blackHole.schwarzschildRadius
     const glow = state.effects.hawkingGlowIntensity
     const horizon = state.effects.horizonProximity
 
@@ -76,7 +76,6 @@ export function HawkingParticles() {
 
     // Radio de emisión en unidades de render — el agujero negro
     // tiene radio visual ~1.92 unidades, emitimos justo por encima
-    const blackHoleVisualRadius = 1
     const emitRadius = blackHoleVisualRadius * 1.05
 
     // Las partículas se expanden hasta ~4× el radio visual del agujero negro
