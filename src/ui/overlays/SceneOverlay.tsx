@@ -3,6 +3,8 @@ import type { SceneView } from "../../render/scene/SimulationScene"
 import { ClockPanel } from "../panels/ClockPanel"
 import { OverlayDock } from "./components/OverlayDock"
 import { StatusPanel } from "./components/StatusPanel"
+import { SpaghettiModal } from "./components/SpaghettiModal"
+import { useSpaghettiModal } from "../state/useSpaghettiModal"
 
 interface SceneOverlayProps {
   state: SimulationState
@@ -36,10 +38,12 @@ export function SceneOverlay({
     state.clocks.farObserverTime - state.clocks.nearObserverTime,
   )
 
+  const spagModal = useSpaghettiModal()
+
+  const isAtHorizon = state.effects.region === "horizon"
+
   return (
     <div className="scene-overlay">
-
-      {/* ── Selector de vistas — arriba izquierda ── */}
       {showViewInfo ? (
         <OverlayDock
           onChangeView={onChangeView}
@@ -56,7 +60,6 @@ export function SceneOverlay({
         </button>
       )}
 
-      {/* ── Status panel — arriba derecha ── */}
       {showStatusPanel ? (
         <StatusPanel
           onToggleVisibility={onToggleStatusPanel}
@@ -68,43 +71,22 @@ export function SceneOverlay({
           onClick={onToggleStatusPanel}
           type="button"
         >
-          Estado
+          Metricas
         </button>
       )}
 
-      {/* ── Reloj lejano — columna izquierda, encima del cercano ── */}
-      {showFarClock ? (
-        <ClockPanel
-          className="clock-panel clock-panel--left-upper"
-          onToggleVisibility={onToggleFarClock}
-          subtitle="Marco de referencia"
-          timeValue={state.clocks.farObserverTime}
-          title="Reloj lejano"
-          tone="far"
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--clock-far-left"
-          onClick={onToggleFarClock}
-          type="button"
-        >
-          Reloj lejano
-        </button>
-      )}
-
-      {/* ── Reloj cercano — columna izquierda, inferior ── */}
       {showNearClock ? (
         <ClockPanel
-          className="clock-panel clock-panel--left-lower"
+          className="clock-panel clock-panel--bottom-left"
           onToggleVisibility={onToggleNearClock}
           subtitle="Nave interactiva"
           timeValue={state.clocks.nearObserverTime}
-          title="Reloj cercano"
+          title="Reloj del observador cercano"
           tone="near"
         />
       ) : (
         <button
-          className="panel-reveal panel-reveal--clock-near-left"
+          className="panel-reveal panel-reveal--clock-left"
           onClick={onToggleNearClock}
           type="button"
         >
@@ -112,15 +94,51 @@ export function SceneOverlay({
         </button>
       )}
 
-      {/* ── Cockpit (solo vista near) ── */}
+      {showFarClock ? (
+        <ClockPanel
+          className="clock-panel clock-panel--bottom-right clock-panel--next-to-panel"
+          onToggleVisibility={onToggleFarClock}
+          subtitle="Marco de referencia"
+          timeValue={state.clocks.farObserverTime}
+          title="Reloj del observador lejano"
+          tone="far"
+        />
+      ) : (
+        <button
+          className="panel-reveal panel-reveal--clock-right panel-reveal--clock-next-to-panel"
+          onClick={onToggleFarClock}
+          type="button"
+        >
+          Reloj lejano
+        </button>
+      )}
+
       {view === "near" && (
         <div className="cockpit-frame" aria-hidden="true">
           <div className="cockpit-top" />
           <div className="cockpit-bottom">
-            <span>{`Tiempo propio ${state.clocks.nearObserverTime.toFixed(1)} s`}</span>
-            <span>{`Brecha ${clockGap.toFixed(1)} s`}</span>
+            <span>{`TIEMPO PROPIO ${state.clocks.nearObserverTime.toFixed(1)} s`}</span>
+            <span>{`BRECHA ${clockGap.toFixed(1)} s`}</span>
           </div>
+
+          {isAtHorizon && (
+            <button
+              className="spag-trigger"
+              onClick={spagModal.open}
+              type="button"
+              aria-label="Ver perspectiva de spaghettification"
+            >
+              ⬤ VER DENTRO
+            </button>
+          )}
         </div>
+      )}
+
+      {spagModal.isOpen && (
+        <SpaghettiModal
+          state={state}
+          onClose={spagModal.close}
+        />
       )}
     </div>
   )
