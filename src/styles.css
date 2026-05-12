@@ -1138,3 +1138,435 @@ body::after {
   display: flex;
   flex-direction: column;
 }
+
+.far-observer-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.far-observer-modal {
+  background: linear-gradient(135deg, rgba(12, 19, 32, 0.98), rgba(8, 13, 24, 0.96));
+  border: 2px solid rgba(122, 209, 255, 0.3);
+  border-radius: 24px;
+  box-shadow:
+    0 32px 96px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  width: min(90vw, 1200px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.far-observer-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  background: rgba(10, 16, 28, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #97aac7;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.far-observer-close-btn:hover {
+  background: rgba(20, 30, 50, 0.9);
+  color: #f3f5f8;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.far-observer-container {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Panel izquierdo: Información */
+.far-observer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(7, 12, 21, 0.5);
+  border: 1px solid rgba(122, 209, 255, 0.15);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.info-header {
+  border-bottom: 1px solid rgba(122, 209, 255, 0.2);
+  padding-bottom: 16px;
+}
+
+.info-header h2 {
+  font-family: "Gill Sans", "Trebuchet MS", sans-serif;
+  font-size: 1.5rem;
+  color: #f3f5f8;
+  margin: 0 0 4px;
+  letter-spacing: 0.01em;
+}
+
+.info-header .subtitle {
+  color: #7ad1ff;
+  font-size: 0.85rem;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.info-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(5, 9, 16, 0.6);
+  border: 1px solid rgba(122, 209, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.metric:hover {
+  background: rgba(5, 9, 16, 0.9);
+  border-color: rgba(122, 209, 255, 0.25);
+}
+
+.metric .label {
+  color: #97aac7;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.metric .value {
+  color: #caecff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: "Monaco", "Courier New", monospace;
+}
+
+.metric .value.redshift-warning {
+  color: #ff8888;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.observer-status {
+  margin-top: 8px;
+  padding: 16px;
+  background: rgba(122, 209, 255, 0.08);
+  border-left: 3px solid #7ad1ff;
+  border-radius: 8px;
+}
+
+.observer-status .status-title {
+  color: #7ad1ff;
+  font-size: 0.85rem;
+  margin: 0 0 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.observer-status .status-text {
+  color: #97aac7;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Panel derecho: Viewport */
+.far-observer-viewport {
+  display: flex;
+  flex-direction: column;
+  background: rgba(7, 12, 21, 0.5);
+  border: 1px solid rgba(122, 209, 255, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.scene-container {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scene-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15, 25, 40, 0.8), rgba(25, 35, 50, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(122, 209, 255, 0.05) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.scene-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.scene-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Contenedor de pensamientos */
+.thoughts-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  justify-content: center;
+}
+
+.thought-bubble {
+  max-width: 280px;
+  background: rgba(10, 16, 28, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.thought-bubble:nth-child(odd) {
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.thought-bubble.fading {
+  animation: fadeOut 1s ease-in forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.thought-text {
+  color: #caecff;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  font-style: italic;
+  margin: 0;
+  word-break: break-word;
+}
+
+.thought-tail {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(10, 16, 28, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-left: none;
+  border-radius: 0 0 12px 0;
+  bottom: -8px;
+  right: 20px;
+  transform: rotate(-45deg);
+}
+
+.thought-bubble:nth-child(odd) .thought-tail {
+  right: auto;
+  left: 20px;
+  transform: rotate(135deg);
+}
+
+/* Panel de acciones */
+.far-observer-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 32px;
+  border-top: 1px solid rgba(122, 209, 255, 0.1);
+  background: rgba(7, 12, 21, 0.3);
+  justify-content: flex-end;
+}
+
+.btn-view-inside,
+.btn-close-modal {
+  padding: 12px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.btn-view-inside {
+  background: linear-gradient(135deg, rgba(122, 209, 255, 0.2), rgba(122, 209, 255, 0.1));
+  color: #7ad1ff;
+  border-color: rgba(122, 209, 255, 0.3);
+}
+
+.btn-view-inside:hover {
+  background: linear-gradient(135deg, rgba(122, 209, 255, 0.3), rgba(122, 209, 255, 0.2));
+  border-color: rgba(122, 209, 255, 0.5);
+  color: #caecff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(122, 209, 255, 0.2);
+}
+
+.btn-close-modal {
+  background: rgba(16, 23, 36, 0.6);
+  color: #97aac7;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-close-modal:hover {
+  background: rgba(16, 23, 36, 0.8);
+  color: #f3f5f8;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .far-observer-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .scene-container {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .far-observer-modal {
+    width: 95vw;
+    max-height: 95vh;
+    border-radius: 16px;
+    padding: 0;
+  }
+
+  .far-observer-container {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .far-observer-info {
+    padding: 16px;
+  }
+
+  .thought-bubble {
+    max-width: 200px;
+    font-size: 0.85rem;
+    padding: 12px;
+  }
+
+  .far-observer-actions {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-view-inside,
+  .btn-close-modal {
+    flex: 1;
+    min-width: 120px;
+  }
+}
