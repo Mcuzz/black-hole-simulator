@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import type {
   Group,
   Mesh,
@@ -10,11 +10,15 @@ import type {
 import * as THREE from "three";
 
 import { useSimulationEngine } from "../hooks/useSimulationEngine";
-import { BLACK_HOLE_VISUAL_RADIUS } from "../../core/units/renderScale";
 
 interface Props {
   type: "near" | "far";
 }
+
+const SPACECRAFT_BASE_SCALE = {
+  near: 1,
+  far: 0.86,
+} as const;
 
 const clamp = (
   value: number,
@@ -82,8 +86,8 @@ export default function Spacecraft({
   const panelMaterialRef =
     useRef<MeshStandardMaterial>(null);
 
-  const [isDragging, setIsDragging] =
-    useState(false);
+  const isDraggingRef =
+    useRef(false);
 
   const reusableColor = useMemo(
     () => new THREE.Color(),
@@ -182,9 +186,7 @@ export default function Spacecraft({
     );
 
     const baseScale =
-      type === "near"
-        ? BLACK_HOLE_VISUAL_RADIUS * 0.23
-        : BLACK_HOLE_VISUAL_RADIUS * 0.19;
+      SPACECRAFT_BASE_SCALE[type];
 
     groupRef.current.scale.set(
       baseScale * stretch,
@@ -305,18 +307,18 @@ export default function Spacecraft({
 
         e.stopPropagation();
 
-        setIsDragging(true);
+        isDraggingRef.current = true;
       }}
       onPointerUp={() =>
-        setIsDragging(false)
+        (isDraggingRef.current = false)
       }
       onPointerOut={() =>
-        setIsDragging(false)
+        (isDraggingRef.current = false)
       }
       onPointerMove={(event) => {
         if (
           type !== "near" ||
-          !isDragging
+          !isDraggingRef.current
         ) return;
 
         event.stopPropagation();

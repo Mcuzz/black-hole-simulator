@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import { useSimulationEngine } from "./render/hooks/useSimulationEngine"
 import { useSimulationState } from "./render/hooks/useSimulationState"
@@ -7,6 +7,24 @@ import { SplashScreen } from "./ui/layout/SplashScreen"
 import { SceneOverlay } from "./ui/overlays/SceneOverlay"
 import { SidePanel } from "./ui/panels/SidePanel"
 import { useViewState } from "./ui/state/useViewState"
+import type { SceneView } from "./render/scene/SimulationScene"
+
+const SCENE_CAMERA = {
+  position: [11, 6, 12] as [number, number, number],
+  fov: 52,
+}
+
+const SceneViewport = memo(function SceneViewport({
+  view,
+}: {
+  view: SceneView
+}) {
+  return (
+    <Canvas camera={SCENE_CAMERA}>
+      <SimulationScene view={view} />
+    </Canvas>
+  )
+})
 
 export default function App() {
   const engine = useSimulationEngine()
@@ -36,9 +54,7 @@ export default function App() {
       <div
         className={`scene-window scene-window--immersive scene-window--${view}`}
       >
-        <Canvas camera={{ position: [11, 6, 12], fov: 52 }}>
-          <SimulationScene view={view} />
-        </Canvas>
+        <SceneViewport view={view} />
 
         <SceneOverlay
           state={state}
