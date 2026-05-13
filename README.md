@@ -18,6 +18,8 @@ El simulador incluye actualmente:
 - Pantalla de inicio interactiva.
 - Escena 3D a pantalla completa con agujero negro, disco de acrecion, campo estelar y dos naves.
 - Selector de vistas entre observador externo, cercano y lejano.
+- Ventana emergente en la vista del observador cercano para explorar la spaghettification desde su marco propio.
+- Ventana emergente en la vista del observador lejano para abrir una cabina de seguimiento con metricas y narrativa contextual.
 - Panel lateral con control de trayectoria y pestanas tematicas.
 - Panel de estado con region fisica y distancia actual.
 - Dos relojes comparativos para mostrar la divergencia temporal entre observadores.
@@ -76,8 +78,10 @@ Flujo principal:
 1. El usuario entra con clic o tecla `Space`.
 2. La escena se muestra como fondo completo.
 3. El panel lateral permite mover la nave cercana radialmente.
-4. Los overlays muestran vista activa, estado general y relojes comparativos.
-5. Las pestanas del panel desarrollan explicaciones y ecuaciones del fenomeno activo.
+4. Los overlays muestran vista activa, estado general, relojes comparativos y marcos de cabina para las vistas de observador.
+5. La vista cercana habilita una lectura inmersiva de spaghettification cuando el observador alcanza la region del horizonte.
+6. La vista lejana permite abrir una cabina de seguimiento con metricas en vivo y pensamientos narrativos del observador remoto.
+7. Las pestanas del panel desarrollan explicaciones y ecuaciones del fenomeno activo.
 
 Controles disponibles:
 
@@ -86,6 +90,8 @@ Controles disponibles:
 - Slider radial: modificar la distancia objetivo de la nave cercana.
 - Botones `-0.5 r_s` y `+0.5 r_s`: mover la nave por incrementos fijos.
 - Arrastre directo de la nave cercana: modificar su distancia objetivo desde la escena.
+- Boton `VER DENTRO` en `Observador cercano`: abre la ventana emergente de spaghettification cuando la nave entra en la region del horizonte.
+- Boton `VER DENTRO` en `Observador lejano`: abre la cabina del observador remoto con metricas, redshift, dilatacion y narrativa contextual.
 - Botones `?` y ocultar/mostrar: desplegar ayuda o limpiar overlays.
 
 ## Modelo fisico resumido
@@ -149,6 +155,8 @@ Fenomenos representados:
 - `favicon.svg`: icono base de la aplicacion.
 - `icons.svg`: sprite o recurso SVG auxiliar para iconografia.
 - `textures/starmap_4k.jpg`: mapa estelar usado por el cielo de fondo.
+- `textures/observer_face.png`: imagen base usada por la ventana emergente de spaghettification.
+- `textures/onvie.png`: ilustracion de cabina usada por la vista emergente del observador lejano.
 
 ### `src/assets/`
 
@@ -283,6 +291,10 @@ Responsabilidad: toda la capa de experiencia de usuario y contenido educativo.
 
 - `OverlayDock.tsx`: selector de vistas y texto contextual asociado.
 - `StatusPanel.tsx`: resumen corto de region y distancia actual.
+- `SpaghettiModal.tsx`: ventana emergente del observador cercano con metricas de horizonte y deformacion visual interactiva.
+- `SpaghettiCanvas.tsx`: lienzo interactivo que distorsiona el retrato del observador segun el factor de spaghettification.
+- `Farobserverview.tsx`: ventana emergente del observador lejano con cabina, metricas comparativas y pensamientos dinamicos.
+- `FarObserverView.css`: estilos dedicados para la ventana emergente del observador lejano.
 
 #### `src/ui/panels/`
 
@@ -350,6 +362,8 @@ Estas piezas pertenecen a una iteracion anterior del panel y se mantienen como l
 #### `src/ui/state/`
 
 - `useViewState.ts`: maneja vista activa y visibilidad de overlays locales.
+- `useSpaghettiModal.tsx`: estado local para abrir y cerrar la ventana emergente del observador cercano.
+- `useFarObserverModal.ts`: estado local para abrir y cerrar la ventana emergente del observador lejano.
 
 ## Archivos raiz y utilidad
 
@@ -390,7 +404,11 @@ Los efectos visuales mas costosos o continuos se resuelven en GPU mediante shade
 
 La UI esta pensada como un tablero de observacion. Cada overlay se puede ocultar de forma localizada y el panel lateral sirve como bitacora activa del experimento.
 
-### 7. Optimizaciones recientes
+### 7. Popups narrativos por observador
+
+Las vistas en primera persona no solo cambian la camara: tambien abren lecturas inmersivas distintas. El observador cercano activa una ventana de spaghettification ligada al horizonte, mientras que el observador lejano abre una cabina de seguimiento con metrica comparativa y narrativa emocional.
+
+### 8. Optimizaciones recientes
 
 - Memoizacion del viewport 3D para reducir re-render de `Canvas`.
 - Drag de la nave cercano resuelto con refs en lugar de estado React por evento.

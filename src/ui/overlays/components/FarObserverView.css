@@ -1,0 +1,302 @@
+/* ─── FAR OBSERVER MODAL ────────────────────────────────────────── */
+
+.far-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: farBackdropIn 0.8s ease-out;
+}
+
+@keyframes farBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/*
+  Modal compacto — mismo espíritu visual que .spag-modal.
+  La imagen de cabina es 1080×1350 (ratio 4:5, más alta que ancha).
+  Limitamos el ancho a ~560px y dejamos que la altura la dicte el contenido.
+*/
+.far-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 95vw);
+  max-height: 92vh;
+  background: rgba(2, 5, 10, 0.97);
+  border: 1px solid rgba(122, 209, 255, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: farModalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 0 0 1px rgba(122, 209, 255, 0.06),
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(122, 209, 255, 0.1);
+}
+
+@keyframes farModalIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ── CLOSE ── */
+.far-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  width: 28px;
+  height: 28px;
+  background: rgba(5, 12, 22, 0.9);
+  border: 1px solid rgba(100, 180, 255, 0.18);
+  border-radius: 50%;
+  color: #5a7a96;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 160ms, border-color 160ms, background 160ms;
+}
+
+.far-modal__close:hover {
+  color: #d8e8f4;
+  border-color: rgba(122, 209, 255, 0.4);
+  background: rgba(122, 209, 255, 0.08);
+}
+
+/* ── HEADER ── */
+.far-modal__header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(100, 180, 255, 0.1);
+  flex-shrink: 0;
+  padding-right: 44px; /* espacio para el botón cerrar */
+}
+
+.far-modal__eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+
+.far-modal__metrics-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.far-metric {
+  background: rgba(5, 10, 18, 0.8);
+  border: 1px solid rgba(100, 180, 255, 0.12);
+  border-radius: 6px;
+  padding: 6px 10px;
+  flex: 1;
+  min-width: 70px;
+}
+
+.far-metric span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.far-metric strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.far-metric--warn strong {
+  color: #ff8870;
+  animation: pulseWarn 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseWarn {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* ── COCKPIT WRAP ──
+   aspect-ratio 1080/1350 = 0.8 — la imagen define la forma del contenedor.
+   El canvas de Three.js sigue renderizando detrás del backdrop,
+   y la zona negra de la ventana de la cabina deja ver la escena
+   gracias a mix-blend-mode: lighten en la imagen.
+*/
+.far-modal__cockpit-wrap {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio fija la altura proporcional a la imagen real */
+  aspect-ratio: 1080 / 1350;
+  /* Nunca superar el alto disponible */
+  max-height: calc(92vh - 160px);
+  overflow: hidden;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.far-modal__cockpit-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 2;
+  /*
+    mix-blend-mode: lighten hace que el negro puro (#000) de la
+    ventana de la cabina quede transparente, dejando ver la escena
+    3D que renderiza detrás del modal backdrop.
+  */
+  mix-blend-mode: lighten;
+}
+
+/* ── THOUGHTS ── */
+.far-modal__thoughts {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 16px 20px;
+  gap: 10px;
+}
+
+.far-thought {
+  max-width: 220px;
+  background: rgba(4, 9, 18, 0.9);
+  border: 1px solid rgba(122, 209, 255, 0.22);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  transition: opacity 600ms ease, transform 600ms ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.far-thought--left  { align-self: flex-start; margin-left: 8px; }
+.far-thought--right { align-self: flex-end;   margin-right: 8px; }
+
+.far-thought--in {
+  opacity: 0;
+  transform: translateY(8px) scale(0.94);
+}
+.far-thought--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.far-thought--out {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+.far-thought p {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: #c8dff0;
+  font-style: italic;
+}
+
+/* Cola del globo */
+.far-thought__tail {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: rgba(4, 9, 18, 0.9);
+  border-right: 1px solid rgba(122, 209, 255, 0.22);
+  border-bottom: 1px solid rgba(122, 209, 255, 0.22);
+  bottom: -5px;
+}
+
+.far-thought--right .far-thought__tail {
+  right: 18px;
+  transform: rotate(45deg);
+}
+
+.far-thought--left .far-thought__tail {
+  left: 18px;
+  transform: rotate(45deg);
+}
+
+/* ── FOOTER ── */
+.far-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(100, 180, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.far-modal__status-text {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  font-style: italic;
+  flex: 1;
+  line-height: 1.5;
+}
+
+.far-modal__btn-close {
+  background: rgba(5, 12, 22, 0.9);
+  border: 1px solid rgba(100, 180, 255, 0.2);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: border-color 160ms, color 160ms, background 160ms;
+  flex-shrink: 0;
+}
+
+.far-modal__btn-close:hover {
+  border-color: rgba(122, 209, 255, 0.4);
+  color: var(--cyan);
+  background: rgba(122, 209, 255, 0.06);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .far-modal {
+    width: 98vw;
+    border-radius: 14px;
+  }
+
+  .far-modal__metrics-strip {
+    gap: 4px;
+  }
+
+  .far-metric {
+    min-width: 60px;
+    padding: 5px 8px;
+  }
+
+  .far-thought {
+    max-width: 180px;
+  }
+}

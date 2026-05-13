@@ -1570,3 +1570,15 @@ body::after {
     min-width: 120px;
   }
 }
+
+/* ── Botón "Ver dentro" para el observador lejano ── */
+.spag-trigger--far {
+  border-color: rgba(122, 209, 255, 0.5);
+  color: var(--cyan);
+  animation: pulse-cyan 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-cyan {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(122, 209, 255, 0); }
+  50%       { box-shadow: 0 0 0 6px rgba(122, 209, 255, 0.12); }
+}

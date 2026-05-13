@@ -1,10 +1,13 @@
+import { createPortal } from "react-dom"
 import type { SimulationState } from "../../core/state/simulationState"
 import type { SceneView } from "../../render/scene/SimulationScene"
 import { ClockPanel } from "../panels/ClockPanel"
 import { OverlayDock } from "./components/OverlayDock"
 import { StatusPanel } from "./components/StatusPanel"
 import { SpaghettiModal } from "./components/SpaghettiModal"
+import { FarObserverView } from "./components/Farobserverview"
 import { useSpaghettiModal } from "../state/useSpaghettiModal"
+import { useFarObserverModal } from "../state/useFarObserverModal"
 
 interface SceneOverlayProps {
   state: SimulationState
@@ -39,107 +42,138 @@ export function SceneOverlay({
   )
 
   const spagModal = useSpaghettiModal()
+  const farModal = useFarObserverModal()
 
   const isAtHorizon = state.effects.region === "horizon"
 
   return (
-    <div className="scene-overlay">
-      {showViewInfo ? (
-        <OverlayDock
-          onChangeView={onChangeView}
-          onToggleVisibility={onToggleViewInfo}
-          view={view}
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--views"
-          onClick={onToggleViewInfo}
-          type="button"
-        >
-          Vistas
-        </button>
-      )}
+    <>
+      <div className="scene-overlay">
+        {showViewInfo ? (
+          <OverlayDock
+            onChangeView={onChangeView}
+            onToggleVisibility={onToggleViewInfo}
+            view={view}
+          />
+        ) : (
+          <button
+            className="panel-reveal panel-reveal--views"
+            onClick={onToggleViewInfo}
+            type="button"
+          >
+            Vistas
+          </button>
+        )}
 
-      {showStatusPanel ? (
-        <StatusPanel
-          onToggleVisibility={onToggleStatusPanel}
-          state={state}
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--status-with-panel"
-          onClick={onToggleStatusPanel}
-          type="button"
-        >
-          Metricas
-        </button>
-      )}
+        {showStatusPanel ? (
+          <StatusPanel
+            onToggleVisibility={onToggleStatusPanel}
+            state={state}
+          />
+        ) : (
+          <button
+            className="panel-reveal panel-reveal--status-with-panel"
+            onClick={onToggleStatusPanel}
+            type="button"
+          >
+            Metricas
+          </button>
+        )}
 
-      {showNearClock ? (
-        <ClockPanel
-          className="clock-panel clock-panel--bottom-left"
-          onToggleVisibility={onToggleNearClock}
-          subtitle="Nave interactiva"
-          timeValue={state.clocks.nearObserverTime}
-          title="Reloj del observador cercano"
-          tone="near"
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--clock-left"
-          onClick={onToggleNearClock}
-          type="button"
-        >
-          Reloj cercano
-        </button>
-      )}
+        {showNearClock ? (
+          <ClockPanel
+            className="clock-panel clock-panel--bottom-left"
+            onToggleVisibility={onToggleNearClock}
+            subtitle="Nave interactiva"
+            timeValue={state.clocks.nearObserverTime}
+            title="Reloj del observador cercano"
+            tone="near"
+          />
+        ) : (
+          <button
+            className="panel-reveal panel-reveal--clock-left"
+            onClick={onToggleNearClock}
+            type="button"
+          >
+            Reloj cercano
+          </button>
+        )}
 
-      {showFarClock ? (
-        <ClockPanel
-          className="clock-panel clock-panel--bottom-right clock-panel--next-to-panel"
-          onToggleVisibility={onToggleFarClock}
-          subtitle="Marco de referencia"
-          timeValue={state.clocks.farObserverTime}
-          title="Reloj del observador lejano"
-          tone="far"
-        />
-      ) : (
-        <button
-          className="panel-reveal panel-reveal--clock-right panel-reveal--clock-next-to-panel"
-          onClick={onToggleFarClock}
-          type="button"
-        >
-          Reloj lejano
-        </button>
-      )}
+        {showFarClock ? (
+          <ClockPanel
+            className="clock-panel clock-panel--bottom-right clock-panel--next-to-panel"
+            onToggleVisibility={onToggleFarClock}
+            subtitle="Marco de referencia"
+            timeValue={state.clocks.farObserverTime}
+            title="Reloj del observador lejano"
+            tone="far"
+          />
+        ) : (
+          <button
+            className="panel-reveal panel-reveal--clock-right panel-reveal--clock-next-to-panel"
+            onClick={onToggleFarClock}
+            type="button"
+          >
+            Reloj lejano
+          </button>
+        )}
 
-      {view === "near" && (
-        <div className="cockpit-frame" aria-hidden="true">
-          <div className="cockpit-top" />
-          <div className="cockpit-bottom">
-            <span>{`TIEMPO PROPIO ${state.clocks.nearObserverTime.toFixed(1)} s`}</span>
-            <span>{`BRECHA ${clockGap.toFixed(1)} s`}</span>
+        {view === "near" && (
+          <div className="cockpit-frame" aria-hidden="true">
+            <div className="cockpit-top" />
+            <div className="cockpit-bottom">
+              <span>{`TIEMPO PROPIO ${state.clocks.nearObserverTime.toFixed(1)} s`}</span>
+              <span>{`BRECHA ${clockGap.toFixed(1)} s`}</span>
+            </div>
+            {isAtHorizon && (
+              <button
+                className="spag-trigger"
+                onClick={spagModal.open}
+                type="button"
+                aria-label="Ver perspectiva de spaghettification"
+              >
+                ⬤ VER DENTRO
+              </button>
+            )}
           </div>
+        )}
 
-          {isAtHorizon && (
+        {view === "far" && (
+          <div className="cockpit-frame" aria-hidden="true">
+            <div className="cockpit-top" />
+            <div className="cockpit-bottom">
+              <span>{`TIEMPO COORDINADO ${state.clocks.farObserverTime.toFixed(1)} s`}</span>
+              <span>{`BRECHA ${clockGap.toFixed(1)} s`}</span>
+            </div>
             <button
-              className="spag-trigger"
-              onClick={spagModal.open}
+              className="spag-trigger spag-trigger--far"
+              onClick={farModal.open}
               type="button"
-              aria-label="Ver perspectiva de spaghettification"
+              aria-label="Ver cabina del observador lejano"
             >
               ⬤ VER DENTRO
             </button>
-          )}
-        </div>
-      )}
+          </div>
+        )}
 
-      {spagModal.isOpen && (
-        <SpaghettiModal
+        {spagModal.isOpen && (
+          <SpaghettiModal
+            state={state}
+            onClose={spagModal.close}
+          />
+        )}
+      </div>
+
+      {/* FarObserverView fuera del scene-overlay (que tiene pointer-events:none)
+          montado directamente en document.body via portal */}
+      {farModal.isOpen && createPortal(
+        <FarObserverView
           state={state}
-          onClose={spagModal.close}
-        />
+          isOpen={farModal.isOpen}
+          onClose={farModal.close}
+        />,
+        document.body
       )}
-    </div>
+    </>
   )
 }
